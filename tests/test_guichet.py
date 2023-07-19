@@ -25,7 +25,7 @@ def test_function_with_float_anottation():
     assert gui.layout
 
 
-def test_function_with_str_anottation():
+def test_function_with_str_annotation():
     def f(x: str):
         pass
 
@@ -33,7 +33,7 @@ def test_function_with_str_anottation():
     assert gui.layout
 
 
-def test_function_with_bool_anottation():
+def test_function_with_bool_annotation():
     def f(x: bool):
         pass
 
@@ -75,7 +75,12 @@ def test_function_with_ignored_parameter():
     assert len(gui.layout) == 3
 
 
-def test_rendering():
+def test_simple_lambda():
+    gui = Guichet(lambda x: x)
+    assert len(gui.layout) == 3
+
+
+def test_rendering_with_annotations():
     def happy_text(text: str, feeling_happy: bool):
         if feeling_happy:
             return text + "!!!"
@@ -83,6 +88,19 @@ def test_rendering():
             return text
 
     gui = Guichet(happy_text)
+    gui.render()
+
+
+def test_rendering_without_annotations():
+    def concat(text1, text2):
+        return text1 + text2
+
+    gui = Guichet(concat)
+    gui.render()
+
+
+def test_rendering_with_simple_lambda():
+    gui = Guichet(lambda x: x)
     gui.render()
 
 
