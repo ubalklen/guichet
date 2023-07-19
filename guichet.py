@@ -109,7 +109,7 @@ class Guichet:
                 for p, v in zip(self._params, values.values()):
                     try:
                         args.append(p.annotation(v))
-                    except ValueError:
+                    except TypeError:
                         args.append(v)
 
                 # Call the function
