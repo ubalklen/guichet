@@ -15,6 +15,6 @@ The code above renders the following GUI:
 
 ![Alt text](assets/image.png)
 
-You can also customize the layout by acessing the `layout` attribute of the `Guichet` object.
+You can also customize the layout by accessing the `layout` attribute of the `Guichet` object.
 
 Guichet is based on the awesome [PySimpleGUI](https://www.pysimplegui.org/) library.
