@@ -1,5 +1,6 @@
 import inspect
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
+from typing import Callable
 
 import PySimpleGUI as sg
 
