@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "guichet"
+version = "0.0.1"
+description = "Quickly create simple GUIs in Python"
+authors = [
+    {name="ubalklen", email="42127323+ubalklen@users.noreply.github.com"},
+]
+readme = "readme.md"
+dependencies = ["PySimpleGUI"]
+
+[project.urls]
+"Homepage" = "https://github.com/ubalklen/guichet"
+"Bug Tracker" = "https://github.com/ubalklen/guichet/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["guichet"]
