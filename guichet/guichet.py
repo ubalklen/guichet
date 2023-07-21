@@ -22,9 +22,7 @@ class Guichet:
 
     def __init__(
         self,
-        main_function,
-        ignore_params: list = None,
-        show_default: bool = True,
+        main_function: Callable,
         title: str = None,
         theme: str = "Dark Blue 3",
         output_size: tuple = (80, 20),
