@@ -25,7 +25,7 @@ class Guichet:
         ignore_params: list = None,
         show_default: bool = True,
         title: str = None,
-        theme: str = None,
+        theme: str = "Dark Blue 3",
         output_size: tuple = (80, 20),
         redirect_stdout: bool = True,
         run_in_new_thread: bool = False,
@@ -42,7 +42,9 @@ class Guichet:
             show_default (bool, optional): Whether to show the default values of the
                 parameters in the GUI.
             title (str, optional): The window title.
-            theme (str, optional): The window theme.
+            theme (str, optional): The window theme. You can explore the list of
+                available themes following these [instructions][1]. Defaults to
+                `"Dark Blue 3"`.
             output_size (tuple, optional): The window size. Defaults to `(80, 20)`.
             redirect_stdout (bool, optional): Whether to redirect the standard output to
                 the GUI's output field. If `True`, regular `print` calls in
@@ -63,6 +65,8 @@ class Guichet:
                 scenarios where the `main_function` needs to communicate with the GUI.
                 The parameter passed to `window` will not be shown in the GUI. Defaults
                 to `None`.
+
+        [1]: https://www.pysimplegui.org/en/latest/cookbook/#themes-window-beautification
         """
         self.main_function = main_function
         self.output_size = output_size
@@ -135,6 +139,7 @@ class Guichet:
             self._output.reroute_stdout_to_here()
             self._output.reroute_stderr_to_here()
 
+        sg.theme(self.theme)
         window = sg.Window(self.title, self.layout)
 
         if self.run_in_new_thread:

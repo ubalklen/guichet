@@ -148,3 +148,10 @@ class TestRendering:
 
         gui = Guichet(counter, window_param="win")
         gui.render()
+
+    def test_theme(self):
+        def hello_world():
+            print("Hello world!")
+
+        gui = Guichet(hello_world, theme="DarkAmber")
+        gui.render()
