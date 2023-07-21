@@ -35,26 +35,31 @@ class Guichet:
         """Creates an object of the Guichet class.
 
         Args:
-            main_function (callable): The function in which the GUI is based on.
-            ignore_params (list, optional): Parameters to be ignored and not shown in
-                the GUI.
-            show_default (bool, optional): Whether to show the default values of the
-                parameters in the GUI.
-            title (str, optional): The window title.
+            main_function (Callable): The function in which the GUI is based on.
+            title (str, optional): The window title. Defaults to `None`, which means the
+                name of the `main_function` will be used.
+            output_size (tuple, optional): The size of the output field, which
+                indirectly sets the size of the window. Defaults to `(80, 20)`.
+            button_label (str, optional): The label of the button that calls
+                `main_function`. Defaults to `"Run"`.
             theme (str, optional): The window theme. You can explore the list of
                 available themes following these [instructions][1]. Defaults to
                 `"Dark Blue 3"`.
-            output_size (tuple, optional): The window size. Defaults to `(80, 20)`.
+            show_default (bool, optional): Whether to show the default values of the
+                parameters in the GUI. Defaults to `True`.
+            ignore_params (list, optional): Parameters to be ignored and not shown in
+                the GUI. Defaults to `None`.
             redirect_stdout (bool, optional): Whether to redirect the standard output to
                 the GUI's output field. If `True`, regular `print` calls in
-                `main_function` will write in output field. Defaults to `True`.
+                `main_function` will write to the output field. Defaults to `True`.
             run_in_new_thread (bool, optional): Whether to run the `main_function` in a
                 new thread. This should only be `True` if the `main_function` is slow
                 and you want to avoid blocking the GUI. Read the docs as some caveats
                 apply when running a function in a separate thread. Defaults to `False`.
             wait_message (str, optional): The message to be shown in the output field.
-            when a users presses "Run" and the function has not yet finished. Applicable
-            only if `run_in_new_thread` is `True`. Defaults to `"Please wait..."`.
+            when a users presses the running button and the function has not yet
+            finished. Applicable only if `run_in_new_thread` is `True`.
+            Defaults to `"Please wait..."`.
             refresh_time (int, optional): Time (in milliseconds) for the window to check
                 again for new events. Useful only in advanced scenarios where
                 `run_in_new_thread` is `True`. Use the highest value you can afford.
