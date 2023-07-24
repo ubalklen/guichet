@@ -1,4 +1,14 @@
+import PySimpleGUI as sg
+
 from guichet import Guichet
+
+
+# Elements in PySimpleGUI need to be in a window to be tested
+# See https://github.com/PySimpleGUI/PySimpleGUI/issues/6450
+def rendered_element(element):
+    layout = [[element]]
+    sg.Window("Test", layout, finalize=True)
+    return element
 
 
 class TestGuichet:
@@ -9,33 +19,46 @@ class TestGuichet:
         gui = Guichet(concat)
         assert len(gui.layout) == 4
 
+        word_1_element = rendered_element(gui.layout[0][0])
+        assert isinstance(word_1_element, sg.Text)
+        assert word_1_element.get() == "word_1"
+
+        word_2_element = rendered_element(gui.layout[1][0])
+        assert isinstance(word_2_element, sg.Text)
+        assert word_2_element.get() == "word_2"
+
+        assert isinstance(gui.layout[0][1], sg.InputText)
+        assert isinstance(gui.layout[1][1], sg.InputText)
+        assert isinstance(gui.layout[2][0], sg.Button)
+        assert isinstance(gui.layout[3][0], sg.Multiline)
+
     def test_function_with_int_annotation(self):
         def f(x: int):
             pass
 
         gui = Guichet(f)
-        assert gui.layout
+        assert isinstance(gui.layout[0][1], sg.InputText)
 
     def test_function_with_float_annotation(self):
         def f(x: float):
             pass
 
         gui = Guichet(f)
-        assert gui.layout
+        assert isinstance(gui.layout[0][1], sg.InputText)
 
     def test_function_with_str_annotation(self):
         def f(x: str):
             pass
 
         gui = Guichet(f)
-        assert gui.layout
+        assert isinstance(gui.layout[0][1], sg.InputText)
 
     def test_function_with_bool_annotation(self):
         def f(x: bool):
             pass
 
         gui = Guichet(f)
-        assert gui.layout
+        assert isinstance(gui.layout[0][1], sg.Checkbox)
 
     def test_function_with_int_default_value(self):
         default_value = 3
@@ -133,8 +156,6 @@ class TestRendering:
         gui.render()
 
     def test_progress_bar(self):
-        import PySimpleGUI as sg
-
         def counter(win: sg.Window):
             n = 100
             for i in range(n):
