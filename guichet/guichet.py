@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Callable
 
 import PySimpleGUI as sg
+from pydantic import SecretStr
 
 
 class Guichet:
@@ -18,6 +19,7 @@ class Guichet:
         float: sg.InputText,
         str: sg.InputText,
         bool: sg.Checkbox,
+        SecretStr: (sg.InputText, {"password_char": "*"}),
     }
 
     def __init__(
@@ -243,10 +245,14 @@ class Guichet:
         # Create the main layout with an appropriate sg element for each parameter
         for p in self._get_params():
             sg_element = Guichet._TYPE_MAP.get(p.annotation, sg.InputText)
+            kwargs = {}
+            if isinstance(sg_element, tuple):
+                sg_element, kwargs = sg_element
+
             if p.default != inspect._empty and self.show_default:
-                layout.append([sg.Text(p.name), sg_element(p.default)])
+                layout.append([sg.Text(p.name), sg_element(p.default, **kwargs)])
             else:
-                layout.append([sg.Text(p.name), sg_element("")])
+                layout.append([sg.Text(p.name), sg_element("", **kwargs)])
 
         # Add a button to call the function
         layout.append([sg.Button(self.button_label, key="-RUN-")])
