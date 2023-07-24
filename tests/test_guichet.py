@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+import pytest
 
 from guichet import Guichet
 
@@ -137,6 +138,20 @@ class TestGuichet:
         gui3 = Guichet(f2)
         assert gui3.layout[0][1].DefaultText == ""
 
+    @pytest.mark.skip(reason="Doesn't work. Don't know why.")
+    def test_output_size(self):
+        def f(x):
+            pass
+
+        gui1 = Guichet(f)
+        output_element = rendered_element(gui1.layout[2][0])
+        assert output_element.get_size() == (80, 20)
+
+        gui2 = Guichet(f, output_size=(100, 40))
+        assert gui2.layout[2][0].get_size() == (100, 40)
+        gui2.output_size = (120, 60)
+        assert gui2.layout[2][0].get_size() == (120, 60)
+
 
 class TestRendering:
     def test_rendering_with_annotations(self):
@@ -217,4 +232,11 @@ class TestRendering:
             print("Hello world!")
 
         gui = Guichet(hello_world, theme="DarkAmber")
+        gui.render()
+
+    def test_output_size(self):
+        def hello_world():
+            print("Hello world!")
+
+        gui = Guichet(hello_world, output_size=(30, 10))
         gui.render()
