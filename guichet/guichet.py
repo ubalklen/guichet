@@ -1,4 +1,5 @@
 import inspect
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable
 
@@ -196,7 +197,7 @@ class Guichet:
                         window["-OUTPUT-"].update(future.result())
                         future = None
                     except Exception as e:
-                        window["-OUTPUT-"].update(f"Error: {e}")
+                        window["-OUTPUT-"].update(traceback.format_exc())
 
                     continue
 
@@ -227,7 +228,7 @@ class Guichet:
                     try:
                         window["-OUTPUT-"].update(self.main_function(**kwargs))
                     except Exception as e:
-                        window["-OUTPUT-"].update(f"Error: {e}")
+                        window["-OUTPUT-"].update(traceback.format_exc())
 
             if event == "-RUN-IN-GUICHET-":
                 values["-RUN-IN-GUICHET-"]()

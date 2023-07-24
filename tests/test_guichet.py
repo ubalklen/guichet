@@ -258,3 +258,10 @@ class TestRendering:
 
         gui = Guichet(check_password)
         gui.render()
+
+    def test_exception(self):
+        def raise_exception():
+            raise Exception("This is an exception")
+
+        gui = Guichet(raise_exception)
+        gui.render()
