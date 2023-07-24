@@ -26,6 +26,7 @@ class Guichet:
         title: str = None,
         theme: str = "Dark Blue 3",
         output_size: tuple = (80, 20),
+        button_label: str = "Run",
         redirect_stdout: bool = True,
         run_in_new_thread: bool = False,
         wait_message: str = "Please wait...",
@@ -85,6 +86,7 @@ class Guichet:
             else:
                 self.ignore_params = ignore_params
         self.title = title or main_function.__name__
+        self.button_label = button_label
         self.theme = theme
         self.redirect_stdout = redirect_stdout
         self.run_in_new_thread = run_in_new_thread
@@ -129,7 +131,19 @@ class Guichet:
     @output_size.setter
     def output_size(self, value):
         self._output_size = value
-        self.layout = self._make_layout(output_size=value)
+
+    @property
+    def button_label(self):
+        try:
+            return self._button_label
+        except AttributeError:
+            return None
+
+    @button_label.setter
+    def button_label(self, value):
+        self._button_label = value
+        self.layout = self._make_layout()
+
 
     def _get_params(self):
         return [
@@ -210,7 +224,7 @@ class Guichet:
             layout.append([sg.Text(p.name), sg_element(default_value)])
 
         # Add a button to call the function
-        layout.append([sg.Button("Run", key="-RUN-")])
+        layout.append([sg.Button(self.button_label, key="-RUN-")])
 
         # Add a multi-line text field to display the output of the function
         self._output = sg.Multiline(key="-OUTPUT-", size=output_size)

@@ -95,6 +95,18 @@ class TestGuichet:
         gui = Guichet(lambda x: x)
         assert len(gui.layout) == 3
 
+    def test_button_label(self):
+        def f(x):
+            pass
+
+        gui1 = Guichet(f)
+        assert gui1.layout[1][0].get_text() == "Run"
+
+        gui2 = Guichet(f, button_label="Go")
+        assert gui2.layout[1][0].get_text() == "Go"
+        gui2.button_label = "Execute"
+        assert gui2.layout[1][0].get_text() == "Execute"
+
 
 class TestRendering:
     def test_rendering_with_annotations(self):
