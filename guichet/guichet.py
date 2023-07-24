@@ -28,6 +28,7 @@ class Guichet:
         output_size: tuple = (80, 20),
         button_label: str = "Run",
         theme: str = "Dark Blue 3",
+        show_default: bool = True,
         redirect_stdout: bool = True,
         run_in_new_thread: bool = False,
         wait_message: str = "Please wait...",
@@ -89,6 +90,7 @@ class Guichet:
         self.title = title or main_function.__name__
         self.button_label = button_label
         self.theme = theme
+        self.show_default = show_default
         self.redirect_stdout = redirect_stdout
         self.run_in_new_thread = run_in_new_thread
         self.wait_message = wait_message
@@ -143,6 +145,18 @@ class Guichet:
     @button_label.setter
     def button_label(self, value):
         self._button_label = value
+        self.layout = self._make_layout()
+
+    @property
+    def show_default(self):
+        try:
+            return self._show_default
+        except AttributeError:
+            return None
+
+    @show_default.setter
+    def show_default(self, value):
+        self._show_default = value
         self.layout = self._make_layout()
 
 
@@ -219,10 +233,12 @@ class Guichet:
         layout = []
 
         # Create the main layout with an appropriate sg element for each parameter
-        for p in self._params:
+        for p in self._get_params():
             sg_element = Guichet._TYPE_MAP.get(p.annotation, sg.InputText)
-            default_value = p.default if p.default != inspect._empty else None
-            layout.append([sg.Text(p.name), sg_element(default_value)])
+            if p.default != inspect._empty and self.show_default:
+                layout.append([sg.Text(p.name), sg_element(p.default)])
+            else:
+                layout.append([sg.Text(p.name), sg_element("")])
 
         # Add a button to call the function
         layout.append([sg.Button(self.button_label, key="-RUN-")])

@@ -119,6 +119,24 @@ class TestGuichet:
         gui2.theme = "DarkPurple"
         assert gui2.theme == "DarkPurple"
 
+    def test_show_default(self):
+        def f(x="foo"):
+            pass
+
+        gui1 = Guichet(f)
+        assert gui1.layout[0][1].DefaultText == "foo"
+
+        gui2 = Guichet(f, show_default=False)
+        assert gui2.layout[0][1].DefaultText == ""
+        gui2.show_default = True
+        assert gui2.layout[0][1].DefaultText == "foo"
+
+        def f2(x):
+            pass
+
+        gui3 = Guichet(f2)
+        assert gui3.layout[0][1].DefaultText == ""
+
 
 class TestRendering:
     def test_rendering_with_annotations(self):
