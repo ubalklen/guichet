@@ -27,6 +27,7 @@ class Guichet:
         theme: str = "Dark Blue 3",
         output_size: tuple = (80, 20),
         button_label: str = "Run",
+        theme: str = "Dark Blue 3",
         redirect_stdout: bool = True,
         run_in_new_thread: bool = False,
         wait_message: str = "Please wait...",

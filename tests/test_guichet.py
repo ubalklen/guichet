@@ -107,6 +107,18 @@ class TestGuichet:
         gui2.button_label = "Execute"
         assert gui2.layout[1][0].get_text() == "Execute"
 
+    def test_theme(self):
+        def f(x):
+            pass
+
+        gui1 = Guichet(f)
+        assert gui1.theme == "Dark Blue 3"
+
+        gui2 = Guichet(f, theme="DarkAmber")
+        assert gui2.theme == "DarkAmber"
+        gui2.theme = "DarkPurple"
+        assert gui2.theme == "DarkPurple"
+
 
 class TestRendering:
     def test_rendering_with_annotations(self):
