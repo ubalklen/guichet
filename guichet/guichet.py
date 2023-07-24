@@ -34,7 +34,7 @@ class Guichet:
         run_in_new_thread: bool = False,
         wait_message: str = "Please wait...",
         refresh_time: int = 1000,
-        window_param=None,
+        window_param: str = None,
     ):
         """Creates an object of the Guichet class.
 
@@ -166,6 +166,19 @@ class Guichet:
             self._ignore_params = value
         self.layout = self._make_layout()
 
+    @property
+    def window_param(self):
+        try:
+            return self._window_param
+        except AttributeError:
+            return None
+
+    @window_param.setter
+    def window_param(self, value):
+        self._window_param = value
+        if value not in self.ignore_params:
+            self.ignore_params.append(value)
+        self.layout = self._make_layout()
 
     def _get_params(self):
         return [
