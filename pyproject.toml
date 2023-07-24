@@ -10,7 +10,7 @@ authors = [
     {name="ubalklen", email="42127323+ubalklen@users.noreply.github.com"},
 ]
 readme = "readme.md"
-dependencies = ["PySimpleGUI"]
+dependencies = ["PySimpleGUI", "pydantic"]
 
 [project.urls]
 "Homepage" = "https://github.com/ubalklen/guichet"

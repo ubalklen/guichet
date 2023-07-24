@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import pytest
+from pydantic import SecretStr
 
 from guichet import Guichet
 
@@ -60,6 +61,13 @@ class TestGuichet:
 
         gui = Guichet(f)
         assert isinstance(gui.layout[0][1], sg.Checkbox)
+
+    def test_function_with_secret_str_annotation(self):
+        def f(x: SecretStr):
+            pass
+
+        gui = Guichet(f)
+        assert isinstance(gui.layout[0][1], sg.InputText)
 
     def test_function_with_int_default_value(self):
         default_value = 3
@@ -239,4 +247,14 @@ class TestRendering:
             print("Hello world!")
 
         gui = Guichet(hello_world, output_size=(30, 10))
+        gui.render()
+
+    def test_password(self):
+        def check_password(password: SecretStr):
+            if password.get_secret_value() == "p@ssw0rd":
+                return "Correct password"
+            else:
+                return "Wrong password"
+
+        gui = Guichet(check_password)
         gui.render()
