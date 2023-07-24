@@ -24,7 +24,6 @@ class Guichet:
         self,
         main_function: Callable,
         title: str = None,
-        theme: str = "Dark Blue 3",
         output_size: tuple = (80, 20),
         button_label: str = "Run",
         theme: str = "Dark Blue 3",
@@ -78,6 +77,7 @@ class Guichet:
         """
         self.main_function = main_function
         self.title = title or main_function.__name__
+        self.output_size = output_size
         self.button_label = button_label
         self.theme = theme
         self.show_default = show_default
@@ -87,7 +87,7 @@ class Guichet:
         self.wait_message = wait_message
         self.refresh_time = refresh_time
         self.window_param = window_param
-        self.layout = self._make_layout(output_size=self.output_size)
+        self.layout = self._make_layout()
 
     @property
     def main_function(self):
@@ -100,20 +100,7 @@ class Guichet:
 
         self._function = value
         self._params = self._get_params()
-        self.layout = self._make_layout(output_size=self.output_size)
-
-    @property
-    def ignore_params(self):
-        try:
-            return self._ignore_params
-        except AttributeError:
-            return None
-
-    @ignore_params.setter
-    def ignore_params(self, value):
-        self._ignore_params = value
-        self._params = self._get_params()
-        self.layout = self._make_layout(output_size=self.output_size)
+        self.layout = self._make_layout()
 
     @property
     def output_size(self):
@@ -125,6 +112,7 @@ class Guichet:
     @output_size.setter
     def output_size(self, value):
         self._output_size = value
+        self.layout = self._make_layout()
 
     @property
     def button_label(self):
@@ -223,7 +211,7 @@ class Guichet:
 
                 # Convert args according to parameter annotations
                 kwargs = {}
-                for p, v in zip(self._params, values.values()):
+                for p, v in zip(self._get_params(), values.values()):
                     try:
                         kwargs[p.name] = p.annotation(v)
                     except TypeError:
@@ -249,7 +237,7 @@ class Guichet:
             self._output.restore_stdout()
             self._output.restore_stderr()
 
-    def _make_layout(self, output_size):
+    def _make_layout(self):
         layout = []
 
         # Create the main layout with an appropriate sg element for each parameter
@@ -264,7 +252,7 @@ class Guichet:
         layout.append([sg.Button(self.button_label, key="-RUN-")])
 
         # Add a multi-line text field to display the output of the function
-        self._output = sg.Multiline(key="-OUTPUT-", size=output_size)
+        self._output = sg.Multiline(key="-OUTPUT-", size=self.output_size)
         layout.append([self._output])
 
         return layout
