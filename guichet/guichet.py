@@ -29,6 +29,7 @@ class Guichet:
         button_label: str = "Run",
         theme: str = "Dark Blue 3",
         show_default: bool = True,
+        ignore_params: list = None,
         redirect_stdout: bool = True,
         run_in_new_thread: bool = False,
         wait_message: str = "Please wait...",
@@ -76,21 +77,11 @@ class Guichet:
         [1]: https://www.pysimplegui.org/en/latest/cookbook/#themes-window-beautification
         """
         self.main_function = main_function
-        self.output_size = output_size
-        if ignore_params is None:
-            if window_param is not None:
-                self.ignore_params = [window_param]
-            else:
-                self.ignore_params = []
-        else:
-            if window_param is not None:
-                self.ignore_params.append(window_param)
-            else:
-                self.ignore_params = ignore_params
         self.title = title or main_function.__name__
         self.button_label = button_label
         self.theme = theme
         self.show_default = show_default
+        self.ignore_params = ignore_params
         self.redirect_stdout = redirect_stdout
         self.run_in_new_thread = run_in_new_thread
         self.wait_message = wait_message
@@ -157,6 +148,22 @@ class Guichet:
     @show_default.setter
     def show_default(self, value):
         self._show_default = value
+        self.layout = self._make_layout()
+
+    @property
+    def ignore_params(self):
+        try:
+            return self._ignore_params
+        except AttributeError:
+            self._ignore_params = []
+            return self._ignore_params
+
+    @ignore_params.setter
+    def ignore_params(self, value):
+        if value is None:
+            self._ignore_params = []
+        else:
+            self._ignore_params = value
         self.layout = self._make_layout()
 
 
