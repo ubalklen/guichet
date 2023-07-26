@@ -17,6 +17,8 @@ The code above renders the following GUI:
 
 You can also customize the layout by accessing the `layout` attribute of the `Guichet` object.
 
+GUI controls are rendered according to [type hints](https://docs.python.org/3/library/typing.html). Supported types include vanilla Python types (such as `str`, `int` and `float`) and [Pydantic types](https://docs.pydantic.dev/latest/usage/types/types/) (such as `SecretStr`).
+
 Guichet is based on the awesome [PySimpleGUI](https://www.pysimplegui.org/) library.
 
 ## Installation
