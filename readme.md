@@ -19,7 +19,7 @@ You can also customize the layout by accessing the `layout` attribute of the `Gu
 
 Guichet is based on the awesome [PySimpleGUI](https://www.pysimplegui.org/) library.
 
-## Instalation
+## Installation
 ```
 pip install guichet
 ```
