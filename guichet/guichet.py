@@ -1,7 +1,7 @@
 import inspect
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from typing import Callable
+from typing import Callable, Literal, get_args, get_origin
 
 import PySimpleGUI as sg
 from pydantic import SecretStr
@@ -21,6 +21,7 @@ class Guichet:
         str: sg.InputText,
         bool: sg.Checkbox,
         SecretStr: (sg.InputText, {"password_char": "*"}),
+        Literal: sg.Combo,
     }
 
     def __init__(
@@ -245,15 +246,32 @@ class Guichet:
 
         # Create the main layout with an appropriate sg element for each parameter
         for p in self._get_params():
-            sg_element = Guichet._TYPE_MAP.get(p.annotation, sg.InputText)
             kwargs = {}
-            if isinstance(sg_element, tuple):
-                sg_element, kwargs = sg_element
-
-            if p.default != inspect._empty and self.show_default:
-                layout.append([sg.Text(p.name), sg_element(p.default, **kwargs)])
+            type_origin = get_origin(p.annotation)
+            if type_origin == Literal:
+                sg_element = Guichet._TYPE_MAP[Literal]
             else:
-                layout.append([sg.Text(p.name), sg_element("", **kwargs)])
+                sg_element = Guichet._TYPE_MAP.get(p.annotation, sg.InputText)
+                if isinstance(sg_element, tuple):
+                    sg_element, kwargs = sg_element
+
+            # Handling control args
+            show_default = p.default != inspect._empty and self.show_default
+            if sg_element == sg.Checkbox:
+                kwargs["text"] = ""
+                if show_default:
+                    kwargs["default"] = p.default
+            elif sg_element == sg.Combo:
+                kwargs["values"] = get_args(p.annotation)
+                if show_default:
+                    kwargs["default_value"] = p.default
+            elif sg_element == sg.InputText:
+                if show_default:
+                    kwargs["default_text"] = p.default
+                else:
+                    kwargs["default_text"] = ""
+
+            layout.append([sg.Text(p.name), sg_element(**kwargs)])
 
         # Add a button to call the function
         layout.append([sg.Button(self.button_label, key="-RUN-")])
