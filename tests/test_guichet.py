@@ -1,3 +1,5 @@
+from typing import Literal
+
 import PySimpleGUI as sg
 import pytest
 from pydantic import SecretStr
@@ -5,7 +7,7 @@ from pydantic import SecretStr
 from guichet import Guichet
 
 
-# Elements in PySimpleGUI need to be in a window to be tested
+# Elements in PySimpleGUI need to be in a window to be properly tested
 # See https://github.com/PySimpleGUI/PySimpleGUI/issues/6450
 def rendered_element(element):
     layout = [[element]]
@@ -69,6 +71,13 @@ class TestGuichet:
         gui = Guichet(f)
         assert isinstance(gui.layout[0][1], sg.InputText)
 
+    def test_function_with_literal_annotation(self):
+        def f(x: Literal["foo", "bar"]):
+            pass
+
+        gui = Guichet(f)
+        assert isinstance(gui.layout[0][1], sg.Combo)
+
     def test_function_with_int_default_value(self):
         default_value = 3
 
@@ -85,13 +94,15 @@ class TestGuichet:
             pass
 
         gui = Guichet(f_true)
-        assert gui.layout[0][1].Text is default_value
+        combo = rendered_element(gui.layout[0][1])
+        assert combo.get() is default_value
 
         def f_false(x: bool = not default_value):
             pass
 
         gui.main_function = f_false
-        assert gui.layout[0][1].Text is not default_value
+        combo = rendered_element(gui.layout[0][1])
+        assert combo.get() is not default_value
 
     def test_function_with_ignored_parameter(self):
         def f(x: int, ignored=None):
@@ -177,6 +188,20 @@ class TestRendering:
             return text1 + text2
 
         gui = Guichet(concat)
+        gui.render()
+
+    def test_rendering_with_defaults(self):
+        def ok(
+            no_hint_param="Default Value",
+            str_param: str = "Default Value",
+            int_param: int = -7,
+            bool_param: bool = True,
+            secret_str_param: SecretStr = "Default Secret",
+            literal_parameter: Literal["Option 1", "Option 2"] = "Option 2",
+        ):
+            return "OK!"
+
+        gui = Guichet(ok)
         gui.render()
 
     def test_rendering_with_simple_lambda(self):
