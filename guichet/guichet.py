@@ -197,7 +197,7 @@ class Guichet:
                     try:
                         window["-OUTPUT-"].update(future.result())
                         future = None
-                    except Exception as e:
+                    except Exception:
                         window["-OUTPUT-"].update(traceback.format_exc())
 
                     continue
@@ -228,7 +228,7 @@ class Guichet:
                 else:
                     try:
                         window["-OUTPUT-"].update(self.main_function(**kwargs))
-                    except Exception as e:
+                    except Exception:
                         window["-OUTPUT-"].update(traceback.format_exc())
 
             if event == "-RUN-IN-GUICHET-":
