@@ -267,7 +267,10 @@ class Guichet:
                     kwargs["default_value"] = p.default
             elif sg_element == sg.InputText:
                 if show_default:
-                    kwargs["default_text"] = p.default
+                    if p.annotation == SecretStr and p.default:
+                        kwargs["default_text"] = p.default.get_secret_value()
+                    else:
+                        kwargs["default_text"] = p.default
                 else:
                     kwargs["default_text"] = ""
 
